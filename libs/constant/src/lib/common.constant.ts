@@ -5,3 +5,6 @@ export enum MetadataKeys {
   SECURED = 'secured',
   USER_DATA = 'userdata',
 }
+export enum REDIS_PROVIDER {
+  REDIS_CLIENT = 'REDIS_CLIENT',
+}
