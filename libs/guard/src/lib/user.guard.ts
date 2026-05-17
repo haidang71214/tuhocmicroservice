@@ -18,6 +18,10 @@ import { TcpClient } from '@common/interfaces/tcp/common/tcp-client.interfaces';
 import { TCP_REQUEST_MESSAGE } from '@common/constant/enum/tcp-invoice.enum';
 import { AuthorizeResponse } from '@common/interfaces/tcp/authorizer';
 import { setUserData } from '@common/utils/request.util';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import * as crypto from 'crypto';
+
 @Injectable()
 export class UserGuard implements CanActivate {
   private readonly logger = new Logger(UserGuard.name);
@@ -25,6 +29,7 @@ export class UserGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     @Inject(TCP_SERVICES.AUTHORIZER_SERVICE) private readonly authorizerClient: TcpClient,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {}
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
@@ -44,12 +49,21 @@ export class UserGuard implements CanActivate {
     try {
       const token = getAccessToken(request);
       const processId = request[MetadataKeys.PROCESS_ID] || getProcessId();
+      const cacheKey = this.generateTokenCaceKey(token);
+
+      const cacheData = await this.cacheManager.get<any>(cacheKey); // quan trọng là bước này
+      if (cacheData) {
+        setUserData(request, cacheData);
+        return true;
+      }
 
       const result = await this.verifyUserToken(token, processId);
       if (!result?.valid) {
         throw new UnauthorizedException('token invalid');
       }
+
       setUserData(request, result);
+      await this.cacheManager.set(cacheKey, result); // và bước này
 
       return true;
     } catch (error: any) {
@@ -69,4 +83,9 @@ export class UserGuard implements CanActivate {
         .pipe(map((data) => data.data)),
     );
   }
+
+  generateTokenCaceKey = (token: string) => {
+    const hash = crypto.createHash('sha256').update(token).digest('hex');
+    return `user-hash:${hash}`;
+  };
 }
