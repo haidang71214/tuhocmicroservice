@@ -14,15 +14,7 @@ async function bootstrap() {
   });
 
   Logger.log(AppModule.CONFIGURATION.GRPC_CONFIG.GRPC_AUTHORIZER_SERVICE);
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.GRPC,
-    options: {
-      url: AppModule.CONFIGURATION.GRPC_CONFIG.GRPC_AUTHORIZER_SERVICE?.options?.url,
-      package: AppModule.CONFIGURATION.GRPC_CONFIG.GRPC_AUTHORIZER_SERVICE?.options?.package,
-      protoPath: AppModule.CONFIGURATION.GRPC_CONFIG.GRPC_AUTHORIZER_SERVICE?.options?.protoPath,
-    },
-  });
-
+  app.connectMicroservice<MicroserviceOptions>(AppModule.CONFIGURATION.GRPC_CONFIG.GRPC_AUTHORIZER_SERVICE);
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   const port = process.env.AUTHORIZER_PORT || 3000;

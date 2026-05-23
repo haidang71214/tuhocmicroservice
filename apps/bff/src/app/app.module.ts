@@ -15,6 +15,7 @@ import { TCP_SERVICES, TcpProvider } from '@common/configuration/tcp.config';
 import { RedisProvider } from '@common/configuration/redis.config';
 import { ThrottlerProvider } from '@common/configuration/throttler.config';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import { GRPC_SERVICES, gRPCPRovider } from '@common/configuration/gRPC.config';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [() => CONFIGURATION] }),
@@ -25,6 +26,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
     ThrottlerProvider,
     ClientsModule.registerAsync([TcpProvider(TCP_SERVICES.AUTHORIZER_SERVICE)]),
     RedisProvider,
+    ClientsModule.registerAsync([gRPCPRovider(GRPC_SERVICES.AUTHORIZER_SERVICE)]),
   ],
   controllers: [],
   providers: [

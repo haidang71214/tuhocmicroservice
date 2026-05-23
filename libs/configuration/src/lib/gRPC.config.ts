@@ -1,10 +1,13 @@
-import { GrpcOptions, Transport } from '@nestjs/microservices';
+import { ClientsProviderAsyncOptions, GrpcOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { IsNotEmpty, IsObject } from 'class-validator';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 export enum GRPC_SERVICES {
-  AUTHORIZER_SERVICE = 'GRPC_AUTHORIZER',
-  USER_ACCESS_SERVICE = 'USER_ACCESS_SERVICE',
+  // chỗ này, mình đang thiết kế key-value với value trùng với tên của package .proto
+  // package authorizer = "GRPC_AUTHORIZER_SERVICE" trong ./proto
+  AUTHORIZER_SERVICE = 'GRPC_AUTHORIZER_SERVICE',
+  // USER_ACCESS_SERVICE = 'USER_ACCESS_SERVICE',
 }
 
 export class GrpcConfig {
@@ -51,3 +54,16 @@ export class GrpcConfiguration {
     };
   }
 }
+// cái này đơn giản thôi, nạp vô config ở bên kia, thì cái này nó sẽ đọc
+// dữ kiện trong cái GRPC_CONFIG vì GRPC_CONFIG = new GrpcConfiguration().
+
+export const gRPCPRovider = (serviceName: GRPC_SERVICES): ClientsProviderAsyncOptions => {
+  return {
+    name: serviceName,
+    imports: [ConfigModule],
+    inject: [ConfigService],
+    useFactory: (config: ConfigService) => {
+      return config.get<GrpcOptions & { name: string }>(`GRPC_CONFIG.${serviceName}`)!;
+    },
+  };
+};

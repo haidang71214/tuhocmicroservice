@@ -1,5 +1,5 @@
 syntax = "proto3";
-package GRPC_AUTHORIZER;
+package GRPC_AUTHORIZER_SERVICE;
 
 message HelloRequest {
   string name = 1;
