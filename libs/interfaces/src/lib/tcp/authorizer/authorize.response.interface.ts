@@ -4,6 +4,8 @@ import { PERMISSION } from '@common/constant/enum/role.enum';
 import { JwtPayload } from 'jsonwebtoken';
 export type LoginTcpResponse = LoginResponseDto;
 
+// AuthorizedMetadata đại diện cho 1 phiên đăng nhập
+// metadata này sẽ được lưu trong cache memory để tránh gọi database
 export class AuthorizedMetadata {
   userId: string | undefined;
   user: User | undefined;

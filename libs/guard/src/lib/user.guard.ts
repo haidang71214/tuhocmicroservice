@@ -34,10 +34,10 @@ export class UserGuard implements CanActivate {
     // truyền đúng cái tên service mà file proto định nghĩa.
     this.authorizerService = this.authorizerGrpcClient.getService<AuthorizerService>('AuthorizerService');
   }
-
+  // phần kích hoạt là phần này, nó gọi cái authOption
+  //  do mình định nghĩa bên controller
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const authOptions = this.reflector.get<{ secured: boolean }>(MetadataKeys.SECURED, context.getHandler());
-
     const request = context.switchToHttp().getRequest();
 
     // Nếu không yêu cầu bảo mật (secured: false hoặc undefined), cho phép truy cập luôn

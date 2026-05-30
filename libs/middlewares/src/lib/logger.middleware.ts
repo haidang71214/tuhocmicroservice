@@ -15,9 +15,9 @@ export class LoggerMiddleware implements NestMiddleware {
       `HTTP >> Start process '${processId}' >> path: '${originalUrl}' >> method: '${method}' at '${now}'
       )}`,
     );
-
+    // sao lưu ngữ cảnh gốc và ghi đè
     const originalSend = res.send.bind(res);
-
+    // hàm này sẽ được chạy sau cùng sau khi interceptor, controller , pipe chạy
     res.send = (body: any) => {
       const durationMs = Date.now() - startTime;
       Logger.log(
@@ -28,7 +28,7 @@ export class LoggerMiddleware implements NestMiddleware {
 
       return originalSend(body);
     };
-
+    // next này tượng trưng cho các bước tiếp theo như interceptor, controller, pipe
     next();
   }
 }
