@@ -5,7 +5,7 @@ import { AppModule } from './app/app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.TCP,
+    transport: Transport.TCP, // chọn phương thức giao tiếp
     options: {
       host: AppModule.CONFIGURATION.TCP_SERV.TCP_PDF_GENERATOR_SERVICE.options?.host,
       port: AppModule.CONFIGURATION.TCP_SERV.TCP_PDF_GENERATOR_SERVICE.options?.port,
@@ -14,7 +14,9 @@ async function bootstrap() {
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   const port = process.env.PDF_GENERATOR_PORT || 3000;
+  // kích hoạt tất cả các microservice đã kết nối.
   await app.startAllMicroservices();
+
   await app.listen(port);
   Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
 }

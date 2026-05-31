@@ -45,17 +45,9 @@ export class TcpConfiguration {
     return { transport: Transport.TCP, options: { host, port } };
   }
 }
-
-// hàm kết nối bất đồng bộ
-//  ClientsModule.register([{name:'TCP_INVOICE_SERVICCE',transport:Transport.TCP,options:{host:'localhost',port:3301}}])],
-// nó đứng ra thay thế cho cái hàm trên để import vào app.module của bff đấy
 export function TcpProvider(serviceName: keyof TcpConfiguration): ClientsProviderAsyncOptions {
   return {
-    //do nó là môi trường cần nàp vào, config provider ở file riêng
     name: serviceName,
-    // dòng name : serviceName, khai báo cho cái
-    // @Injection(TCP_SERVICES.AUTHORIZER_SERVICE) private readonly tcpclient : tcpClient
-    // nó sẽ tự ánh xạ qua enum.
     imports: [ConfigModule],
     inject: [ConfigService],
     useFactory: (configService: ConfigService) => {

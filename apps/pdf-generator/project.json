@@ -60,11 +60,6 @@
           "buildTarget": "pdf-generator:build:production"
         }
       }
-    },
-    "test": {
-      "options": {
-        "passWithNoTests": true
-      }
     }
   }
 }

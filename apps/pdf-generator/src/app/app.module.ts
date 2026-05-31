@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { PdfModule } from './pdf/app.module';
 import { CONFIGURATION, TConfiguration } from '../Configuration';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true, load: [() => ({ ...CONFIGURATION })] })],
+  imports: [PdfModule],
   controllers: [],
   providers: [],
 })
