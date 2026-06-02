@@ -15,8 +15,15 @@ export class UserGrpcController {
   constructor(private readonly userService: UserService) {}
 
   @GrpcMethod('UserAccessService', 'getByUserId')
-  async getByUserId(params: UserByIdParams): Promise<ResponseGrpc<User>> {
+  async getByUserId(params: UserByIdParams): Promise<ResponseGrpc<any>> {
     const result = await this.userService.getByUserId(params.id);
+    if (result) {
+      const userObj = result.toObject();
+      return ResponseGrpc.success({
+        ...userObj,
+        roles: userObj.role || [],
+      });
+    }
     return ResponseGrpc.success(result);
   }
 }

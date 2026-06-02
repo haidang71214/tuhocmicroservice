@@ -57,13 +57,18 @@ export class AuthorizeService {
       const publicKey = key.getPublicKey();
       const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] }) as JwtPayload;
       const user = await this.validationUser(payload.sub, processId);
+      const roles = (user as any).roles || (user as any).role || [];
+      const permissions = (roles as Role[]).flatMap((role) => role.permissions ?? []);
       return {
         valid: true,
         metadata: {
           jwt: payload,
-          permissions: ((user.role as unknown as Role[]) || []).flatMap((role) => role.permissions ?? []),
-          user: user,
-          userId: user.id,
+          permissions,
+          user: {
+            ...user,
+            role: roles,
+          } as any,
+          userId: user.id || (user as any)._id?.toString(),
         },
       };
     } catch (error) {

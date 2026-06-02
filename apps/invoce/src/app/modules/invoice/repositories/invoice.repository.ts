@@ -9,7 +9,7 @@ export class InvoiceRepository {
   // khi mình dùng partial thì mình sẽ chưa mong muốn là data sẽ truyền tất cả các fields.
   // nó sẽ làm tất cả kiểu dữ liệ trong Invoice trở thành optional hết.
   create(data: Partial<Invoice>) {
-    return this.invoiceModel.create({ ...data, status: INVOICE_STATUS.CREATE });
+    return this.invoiceModel.create({ ...data, status: INVOICE_STATUS.CREATED });
   }
   getById(id: string) {
     return this.invoiceModel.findById(id);
@@ -25,5 +25,8 @@ export class InvoiceRepository {
 
   deleteById(id: string) {
     return this.invoiceModel.findByIdAndDelete(id);
+  }
+  findById(id: string) {
+    return this.invoiceModel.findById(id);
   }
 }

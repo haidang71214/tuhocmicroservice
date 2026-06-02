@@ -18,7 +18,7 @@ export class PermissionGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const userData = request[MetadataKeys.USER_DATA] as AuthorizeResponse;
-    const userPermissions = userData.metadata.permissions as PERMISSION[];
+    const userPermissions = (userData?.metadata?.permissions || []) as PERMISSION[];
     // check xem có quyền nào không
     const isValid = requiredPermissions.every((permission) => userPermissions.includes(permission));
 

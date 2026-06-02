@@ -10,6 +10,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
+import { Types } from 'mongoose';
 
 class ClientRequestDto {
   @ApiProperty()
@@ -88,7 +89,7 @@ export class InvoiceRequestDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
-  supervisorId?: string;
+  supervisorId?: Types.ObjectId;
 
   @ApiProperty()
   @IsString()

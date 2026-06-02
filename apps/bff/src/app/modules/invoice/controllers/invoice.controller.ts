@@ -1,13 +1,13 @@
-import { Body, Controller, Get, Inject, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Logger, Param, Post } from '@nestjs/common';
 import { ResponseDto } from '@common/interfaces/gateway/response.interface';
 import { map } from 'rxjs';
 import { TCP_SERVICES } from '@common/configuration/tcp.config';
 import { TcpClient } from '@common/interfaces/tcp/common/tcp-client.interfaces';
 import { ProcessId } from '@common/decorator/lib/processId.decorator';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { InvoiceResponseDto, InvoiceRequestDto } from '@common/interfaces/gateway/invoice';
 import { TCP_REQUEST_MESSAGE } from '@common/constant/enum/tcp-invoice.enum';
-import { InvoiceTcpRequest, InvoiceTcpResponse } from '@common/interfaces/tcp/invoice';
+import { InvoiceTcpRequest, InvoiceTcpResponse, SendInvoiceTcpRequest } from '@common/interfaces/tcp/invoice';
 import { Authorization } from '@common/decorator/lib/authorizer.decorator';
 import { UserData } from '@common/decorator/lib/userData.decorator';
 import { AuthorizedMetadata } from '@common/interfaces/tcp/authorizer';
@@ -40,5 +40,17 @@ export class InvoiceController {
         { invoiceId: number; invoiceName: string }
       >('get_invoice', { processId, data: { invoiceId: 12, invoiceName: 'asdasdas' } })
       .pipe(map((data) => new ResponseDto<string>(data)));
+  }
+  @Post(':id/send')
+  @ApiOkResponse({ type: ResponseDto<string> })
+  @Authorization({ secured: true })
+  @Permissons([PERMISSION.INVOICE_SEND])
+  async sendInvoice(@Param('id') id: string, @ProcessId() processId: string, @UserData() userData: AuthorizedMetadata) {
+    return this.invoiceClient
+      .send<string, SendInvoiceTcpRequest>(TCP_REQUEST_MESSAGE.Invoice.SEND, {
+        data: { invoiceId: id, userId: userData.userId }, // chỗ này hình như sai thì phải.
+        processId,
+      })
+      .pipe(map((data) => new ResponseDto(data)));
   }
 }

@@ -2,11 +2,12 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import path from 'path';
 import fs from 'fs';
 import ejs from 'ejs';
+import puppeteer from 'puppeteer';
+
 @Injectable()
 export class PdfService {
   private readonly logger = new Logger(PdfService.name);
-  // cái này là để tạo dữ liệu
-  async renderEjsTemplate(templatePath: string, data: any) {
+  async renderEjsTemplate(templatePath: string, data: any): Promise<string> {
     const fullPath = path.resolve(templatePath);
     if (!fs.existsSync(fullPath)) {
       throw new NotFoundException(`file not found${fullPath}`);
@@ -14,9 +15,19 @@ export class PdfService {
     return ejs.renderFile(fullPath, data);
   }
 
-  async generateEjsPdf(templatePath: string, data: any) {
+  async generatePdfFromEjs(templatePath: string, data: any): Promise<Uint8Array> {
     const html = await this.renderEjsTemplate(templatePath, data);
-
-    return { html };
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    try {
+      const page = await browser.newPage();
+      await page.setContent(html, { waitUntil: 'networkidle0' as any });
+      const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
+      return pdfBuffer;
+    } finally {
+      await browser.close();
+    }
   }
 }
