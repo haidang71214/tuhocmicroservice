@@ -33,12 +33,16 @@ enum PdfGenerator {
   CREATE_INVOICE_PDF = 'pdf-generator.create-invoice-pdf',
   GET_INVOICE_PDF = 'pdf-generator.get-invoice-pdf',
 }
+enum Media {
+  UPLOAD_FILE = 'media.upload-file',
+}
 export const TCP_REQUEST_MESSAGE = {
   Invoice,
   Product,
   KeyCloak,
   User,
   Authorizer,
+  Media,
   PdfGenerator,
 };
 
