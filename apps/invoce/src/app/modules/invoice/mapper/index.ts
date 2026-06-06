@@ -8,3 +8,16 @@ export const invoiceRequestMapping = (data: InvoiceTcpRequest): Partial<Invoice>
     vatAmount: data.items.reduce((acc, item) => acc + item.unitPrice * item.quantity * (item.vatRate / 100), 0),
   };
 };
+export const createCheckoutSessionMapping = (invoice: Invoice) => {
+  return {
+    invoiceId: invoice.id,
+    lineItems: invoice.items.map((item) => {
+      return {
+        name: item.name,
+        price: item.unitPrice,
+        quantity: item.quantity,
+      };
+    }),
+    clientEmail: invoice.client.email,
+  };
+};

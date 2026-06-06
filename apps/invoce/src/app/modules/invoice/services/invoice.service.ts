@@ -10,10 +10,13 @@ import { TCP_REQUEST_MESSAGE } from '@common/constant/enum/tcp-invoice.enum';
 import { Invoice } from '@common/schemas/lib/invoice.schema';
 import { firstValueFrom, map } from 'rxjs';
 import type { TcpClient } from '@common/interfaces/tcp/common/tcp-client.interfaces';
+import { PaymentService } from '../../payment/services/payment.service';
+import { createCheckoutSessionMapping } from '../mapper/index';
 @Injectable()
 export class InvoiceService {
   constructor(
     private readonly invoiceRepository: InvoiceRepository,
+    private readonly paymentService: PaymentService,
     @Inject(TCP_SERVICES.PDF_GENERATOR_SERVICE) private readonly pdfGeneratorClient: TcpClient,
     @Inject(TCP_SERVICES.MEDIA_SERVICE) private readonly mediaClient: TcpClient,
   ) {}
@@ -40,6 +43,7 @@ export class InvoiceService {
       },
       processId,
     );
+    const checkoutLink = await this.paymentService.createStripeSession(createCheckoutSessionMapping(invoice));
 
     if (!fileUrl) {
       throw new BadRequestException('Upload file failed');
@@ -50,7 +54,7 @@ export class InvoiceService {
       fileUrl,
     });
 
-    return fileUrl;
+    return checkoutLink.url;
   }
 
   generatorPdf(data: Invoice, processId: string) {
@@ -71,5 +75,15 @@ export class InvoiceService {
         })
         .pipe(map((data) => data.data)),
     );
+  }
+
+  async updateInvoicePaid(invoiceId: string) {
+    const invoice = await this.invoiceRepository.findById(invoiceId);
+    if (!invoice) {
+      throw new BadRequestException('Invoice not found');
+    }
+    return this.invoiceRepository.updateById(invoiceId, {
+      status: INVOICE_STATUS.PAID,
+    });
   }
 }

@@ -6,7 +6,6 @@ import puppeteer from 'puppeteer';
 
 @Injectable()
 export class PdfService {
-  private readonly logger = new Logger(PdfService.name);
   async renderEjsTemplate(templatePath: string, data: any): Promise<string> {
     const fullPath = path.resolve(templatePath);
     if (!fs.existsSync(fullPath)) {

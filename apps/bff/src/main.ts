@@ -11,7 +11,7 @@ import { CONFIGURATION } from './Configuration';
 
 async function bootstrap() {
   try {
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(AppModule, { rawBody: true });
     const globalPrefix = CONFIGURATION.GLOBAL_PREFIX;
     app.setGlobalPrefix(globalPrefix);
     app.useGlobalPipes(new ValidationPipe({ transform: true }));

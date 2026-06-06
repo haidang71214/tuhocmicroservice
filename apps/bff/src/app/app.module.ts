@@ -8,6 +8,7 @@ import { InvoiceModule } from './modules/invoice/invoice.module';
 import { ProductModule } from './modules/product/product.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthorizeModule } from './modules/Authorize/authorize.module';
+import { WebhookModule } from './modules/webhook/webhook.module';
 import { UserGuard } from '@common/guard/user.guard';
 import { PermissionGuard } from '@common/guard/permisson.guard';
 import { ClientsModule } from '@nestjs/microservices';
@@ -23,6 +24,7 @@ import { GRPC_SERVICES, gRPCPRovider } from '@common/configuration/gRPC.config';
     ProductModule,
     UserModule,
     AuthorizeModule,
+    WebhookModule,
     ThrottlerProvider,
     ClientsModule.registerAsync([TcpProvider(TCP_SERVICES.AUTHORIZER_SERVICE)]),
     RedisProvider,
