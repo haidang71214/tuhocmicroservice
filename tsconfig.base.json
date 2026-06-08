@@ -13,7 +13,11 @@
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
-    "paths": {}
+    "paths": {
+      "@invoce/constant": ["./libs/constant/src/index.ts"],
+      "@common/constant": ["./libs/constant/src/index.ts"],
+      "@common/constant/*": ["./libs/constant/src/lib/*"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
