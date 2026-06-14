@@ -13,9 +13,9 @@ describe('AppController', () => {
   });
 
   describe('getData', () => {
-    it('should return "hehe running on port 3000"', () => {
+    it('should return "Hello API"', () => {
       const appController = app.get<AppController>(AppController);
-      expect(appController.getData()).toEqual('hehe running on port 3000');
+      expect(appController.getData()).toEqual({ message: 'Hello API' });
     });
   });
 });

@@ -42,7 +42,9 @@
       "exclude": [
         "apps/invoce-e2e/**/*",
         "shitapp-e2e/**/*",
-        "apps/shitapp-e2e/**/*"
+        "apps/shitapp-e2e/**/*",
+        "bff-e2e/**/*",
+        "apps/bff-e2e/**/*"
       ]
     }
   ]
