@@ -6,9 +6,9 @@ module.exports = {
   parserPreset: {
     parserOpts: {
       // Regex parse commit message
-      // Format: <type>/#<scope>: <subject>
-      // Ví dụ: feat/#auth: thêm chức năng đăng nhập với JWT
-      headerPattern: /^(\w+)\/#(\w+): (.*)$/,
+      // Format: <type>(<scope>): <subject>
+      // Ví dụ: feat(auth): thêm chức năng đăng nhập với JWT
+      headerPattern: /^(\w+)\(([^)]+)\): (.*)$/,
 
       // Ánh xạ các group trong regex vào field của commitlint
       headerCorrespondence: ['type', 'scope', 'subject'],
