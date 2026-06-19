@@ -2,6 +2,13 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "defaultBase": "master",
   "analytics": true,
+  "targetDefaults": {
+    "test": {
+      "options": {
+        "passWithNoTests": true
+      }
+    }
+  },
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "production": [

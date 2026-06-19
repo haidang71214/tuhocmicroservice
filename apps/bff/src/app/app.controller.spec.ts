@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ResponseDto } from '@common/interfaces/gateway/response.interface';
+import { TCP_SERVICES } from '@common/configuration/tcp.config';
 
 describe('AppController', () => {
   let app: TestingModule;
@@ -9,7 +10,16 @@ describe('AppController', () => {
   beforeAll(async () => {
     app = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [AppService],
+      providers: [
+        AppService,
+        {
+          provide: TCP_SERVICES.INVOICE_SERVICE,
+          useValue: {
+            send: jest.fn(),
+            emit: jest.fn(),
+          },
+        },
+      ],
     }).compile();
   });
 

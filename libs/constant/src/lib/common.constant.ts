@@ -1,5 +1,5 @@
 export const HOST = 3000;
 export enum MetadataKeys {
-  PROCESS_ID = 'ÁDASDASDASDASDZXCZXC',
-  START_TIME = 'ÁDXZCZXCQWEBQMWNBRIOITUOIUSOI',
+  PROCESS_ID = 'ProcessID',
+  START_TIME = 'StartTime',
 }

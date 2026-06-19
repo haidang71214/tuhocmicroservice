@@ -22,10 +22,10 @@
       "@common/configuration/*": ["./libs/configuration/src/lib/*"],
       "@common/middlewares/*": ["./libs/middlewares/src/lib/*"],
       "@common/utils/*": ["./libs/utils/src/lib/*"],
-      "@common/utils": ["./libs/utils/src/index.ts"],
       "@common/interfaces/*": ["./libs/interfaces/src/lib/*"],
       "@common/interfaces/gateway/*": ["./libs/interfaces/src/lib/gateway/*"],
-      "@common/interceptors/*": ["./libs/interceptors/src/lib/*"]
+      "@common/interceptors/*": ["./libs/interceptors/src/lib/*"],
+      "@common/decorator/*": ["./libs/decorators/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]
