@@ -50,12 +50,14 @@ export class Invoice extends BaseSchema {
 
   @Prop({ type: String, enum: INVOICE_STATUS, default: INVOICE_STATUS.CREATE })
   status!: INVOICE_STATUS;
+  @Prop({ type: String, required: false })
+  supervisorId?: string;
+  @Prop({ type: String, required: false })
+  fileUrl?: string;
 }
 // đăng kí schema cho mongo.
 export const InvoiceSchema = createSchema(Invoice);
 export const InvoiceModelName = Invoice.name;
-// hồi trước mình làm thì mình cũng phải import từng cái này vô module để sử dụng
-// nhưng giờ mình có thể custom nó vào đây luôn.
 export const InvoiceDestination = {
   name: InvoiceModelName,
   schema: InvoiceSchema,

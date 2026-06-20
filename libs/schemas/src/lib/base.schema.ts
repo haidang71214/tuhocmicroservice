@@ -21,7 +21,7 @@ export class BaseSchema {
 }
 // ở đây mình sẽ truyền cái class Invoice (ở dưới) vào đây
 // ờm, mình cứ hiểu đây là 1 kiểu custom lại cái createForClass
-export const createSchema = <TClass = any>(target: Type<TClass>) => {
+export const createSchema = <TClass = any>(target: Type<TClass>): Schema => {
   const schema = SchemaFactory.createForClass(target);
   schema.set('toJSON', {
     virtuals: true,
@@ -31,4 +31,6 @@ export const createSchema = <TClass = any>(target: Type<TClass>) => {
   });
   schema.set('versionKey', false);
   schema.set('timestamps', true);
+
+  return schema;
 };
