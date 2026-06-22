@@ -5,15 +5,18 @@ import { TcpLoggingInterceptor } from '@common/interceptors/TcpLogging.intercept
 import { Response } from '@common/interfaces/tcp/common/response.interface';
 import { ProcessId } from '@common/decorator/lib/processId.decorator';
 import { RequestParams } from '@common/decorator/lib/request.decorator';
-
+import { TCP_REQUEST_MESSAGE } from '@common/constant/enum/tcp-invoice.enum';
+import type { InvoiceTcpRequest } from '@common/interfaces/tcp/invoice/invoice-request.interfaces';
+import { InvoiceTcpResponse } from '@common/interfaces/tcp/invoice/invoice-response.interfaces';
 @Controller()
 @UseInterceptors(TcpLoggingInterceptor)
 export class InvoiceController {
-  constructor(private readonly appService: InvoiceService) {}
+  constructor(private readonly invoiceSerivcec: InvoiceService) {}
 
-  @Get()
-  getData() {
-    return this.appService.getHello('hehASDADASDASDADe');
+  @MessagePattern(TCP_REQUEST_MESSAGE.Invoice.CREATE)
+  async createInvoice(@RequestParams() params: InvoiceTcpRequest): Promise<Response<InvoiceTcpResponse>> {
+    const result = await this.invoiceSerivcec.createInvoiceService(params);
+    return Response.success<InvoiceTcpResponse>(result);
   }
 
   @MessagePattern('get_invoice')

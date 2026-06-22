@@ -41,8 +41,18 @@ export class ExceptionInterceptor implements NestInterceptor {
         const durationMs = Date.now() - startTime;
         // CÚ PHÁP: Sử dụng optional chaining (?.) và toán tử OR (||) để trích xuất tin nhắn lỗi một cách an toàn nhất
         const message = error?.response?.message || error?.message || error || HTTP_MESSAGE.INTERNAL_SERVER_ERROR;
-        // Trích xuất mã HTTP Code (status code) của lỗi
-        const code = error?.code || error.statusCode || error?.response?.statusCode || HttpStatus.INTERNAL_SERVER_ERROR;
+        // Trích xuất mã HTTP Code (status code) của lỗi một cách an toàn
+        let code = HttpStatus.INTERNAL_SERVER_ERROR;
+        if (error instanceof HttpException) {
+          code = error.getStatus();
+        } else {
+          const possibleStatus =
+            error?.status || error?.statusCode || error?.response?.statusCode || error?.response?.status;
+          const parsedStatus = Number(possibleStatus);
+          if (Number.isInteger(parsedStatus) && parsedStatus >= 100 && parsedStatus < 600) {
+            code = parsedStatus;
+          }
+        }
         // Ném ra ngoại lệ HttpException chuẩn của NestJS bọc trong cấu trúc ResponseDto đồng nhất
         throw new HttpException(
           new ResponseDto({

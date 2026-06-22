@@ -8,15 +8,15 @@ export class BaseSchema {
   // thế nên mình cần custom 1 cái virtual fields nhằm mục đích handle trường hợp đó.
   _id!: Types.ObjectId;
   @Virtual({
-    get: (doc: any) => {
-      return doc._id.toString();
+    get: function (this: any) {
+      return this._id?.toString();
     },
   })
   id!: string;
-  @Prop({ type: Date, default: new Date() })
+  @Prop({ type: Date, default: () => new Date() })
   createAt!: Date;
 
-  @Prop({ type: Date, default: new Date() })
+  @Prop({ type: Date, default: () => new Date() })
   updateAt!: Date;
 }
 // ở đây mình sẽ truyền cái class Invoice (ở dưới) vào đây
