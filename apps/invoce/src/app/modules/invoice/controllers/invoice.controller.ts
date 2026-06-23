@@ -1,4 +1,4 @@
-import { Controller, Get, UseInterceptors } from '@nestjs/common';
+import { Controller, UseInterceptors } from '@nestjs/common';
 import { InvoiceService } from '../services/invoice.service';
 import { MessagePattern } from '@nestjs/microservices';
 import { TcpLoggingInterceptor } from '@common/interceptors/TcpLogging.interceptor';

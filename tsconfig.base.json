@@ -26,7 +26,8 @@
       "@common/interfaces/gateway/*": ["./libs/interfaces/src/lib/gateway/*"],
       "@common/interceptors/*": ["./libs/interceptors/src/lib/*"],
       "@common/decorator/*": ["./libs/decorators/src/*"],
-      "@common/schemas/*": ["./libs/schemas/src/*"]
+      "@common/schemas/*": ["./libs/schemas/src/*"],
+      "@common/entities/*": ["./libs/entities/src/lib/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -7,13 +7,13 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,
     options: {
-      host: AppModule.CONFIGURATION.TCP_SERV.TCP_INVOICE_SERVICE.options?.host,
-      port: AppModule.CONFIGURATION.TCP_SERV.TCP_INVOICE_SERVICE.options?.port,
+      host: AppModule.CONFIGURATION.TCP_SERV.TCP_PRODUCT_SERVICE.options?.host,
+      port: AppModule.CONFIGURATION.TCP_SERV.TCP_PRODUCT_SERVICE.options?.port,
     },
   });
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
-  const port = process.env.INVOCE_PORT || 3000;
+  const port = process.env.PRODUCT_PORT || 3000;
   // kích hoạt tất cả các microservice đã kết nối.
   await app.startAllMicroservices();
 

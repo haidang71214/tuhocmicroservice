@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDate, IsOptional, IsString } from 'class-validator';
 
-export class BaseResponseDto {
+export class BaseEntitiesResponseDto {
   @ApiProperty()
-  id!: string;
+  id!: number;
 
   @ApiProperty()
   createdAt!: Date;

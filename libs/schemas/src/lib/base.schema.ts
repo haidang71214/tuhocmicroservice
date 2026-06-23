@@ -14,10 +14,10 @@ export class BaseSchema {
   })
   id!: string;
   @Prop({ type: Date, default: () => new Date() })
-  createAt!: Date;
+  createdAt!: Date;
 
   @Prop({ type: Date, default: () => new Date() })
-  updateAt!: Date;
+  updatedAt!: Date;
 }
 // ở đây mình sẽ truyền cái class Invoice (ở dưới) vào đây
 // ờm, mình cứ hiểu đây là 1 kiểu custom lại cái createForClass

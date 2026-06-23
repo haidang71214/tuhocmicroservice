@@ -14,10 +14,7 @@
       "internalConsoleOptions": "neverOpen",
       "skipFiles": ["<node_internals>/**"],
       "sourceMaps": true,
-      "outFiles": [
-        "${workspaceFolder}/apps/invoce/dist/**/*.(m|c|)js",
-        "!**/node_modules/**"
-      ]
+      "outFiles": ["${workspaceFolder}/apps/invoce/dist/**/*.(m|c|)js", "!**/node_modules/**"]
     },
     {
       "type": "node",
@@ -32,10 +29,7 @@
       "internalConsoleOptions": "neverOpen",
       "skipFiles": ["<node_internals>/**"],
       "sourceMaps": true,
-      "outFiles": [
-        "${workspaceFolder}/shitapp/dist/**/*.(m|c|)js",
-        "!**/node_modules/**"
-      ]
+      "outFiles": ["${workspaceFolder}/shitapp/dist/**/*.(m|c|)js", "!**/node_modules/**"]
     },
     {
       "type": "node",
@@ -50,10 +44,7 @@
       "internalConsoleOptions": "neverOpen",
       "skipFiles": ["<node_internals>/**"],
       "sourceMaps": true,
-      "outFiles": [
-        "${workspaceFolder}/apps/shitapp/dist/**/*.(m|c|)js",
-        "!**/node_modules/**"
-      ]
+      "outFiles": ["${workspaceFolder}/apps/shitapp/dist/**/*.(m|c|)js", "!**/node_modules/**"]
     },
     {
       "type": "node",
@@ -68,10 +59,7 @@
       "internalConsoleOptions": "neverOpen",
       "skipFiles": ["<node_internals>/**"],
       "sourceMaps": true,
-      "outFiles": [
-        "${workspaceFolder}/bff/dist/**/*.(m|c|)js",
-        "!**/node_modules/**"
-      ]
+      "outFiles": ["${workspaceFolder}/bff/dist/**/*.(m|c|)js", "!**/node_modules/**"]
     },
     {
       "type": "node",
@@ -86,10 +74,22 @@
       "internalConsoleOptions": "neverOpen",
       "skipFiles": ["<node_internals>/**"],
       "sourceMaps": true,
-      "outFiles": [
-        "${workspaceFolder}/apps/bff/dist/**/*.(m|c|)js",
-        "!**/node_modules/**"
-      ]
+      "outFiles": ["${workspaceFolder}/apps/bff/dist/**/*.(m|c|)js", "!**/node_modules/**"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug product with Nx",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["nx", "serve", "product"],
+      "env": {
+        "NODE_OPTIONS": "--inspect=9234"
+      },
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"],
+      "sourceMaps": true,
+      "outFiles": ["${workspaceFolder}/apps/product/dist/**/*.(m|c|)js", "!**/node_modules/**"]
     }
   ]
 }

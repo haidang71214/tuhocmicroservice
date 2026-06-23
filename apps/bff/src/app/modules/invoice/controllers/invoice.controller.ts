@@ -1,10 +1,9 @@
 import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
 import { ResponseDto } from '@common/interfaces/gateway/response.interface';
-import { firstValueFrom, map } from 'rxjs';
+import { map } from 'rxjs';
 import { TCP_SERVICES } from '@common/configuration/tcp.config';
 import { TcpClient } from '@common/interfaces/tcp/common/tcp-client.interfaces';
 import { ProcessId } from '@common/decorator/lib/processId.decorator';
-import { InvoiceService } from '../services/invoice.service';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { InvoiceResponseDto, InvoiceRequestDto } from '@common/interfaces/gateway/invoice';
 import { TCP_REQUEST_MESSAGE } from '@common/constant/enum/tcp-invoice.enum';

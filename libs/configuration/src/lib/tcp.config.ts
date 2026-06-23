@@ -4,12 +4,17 @@ import { IsNotEmpty, IsObject } from 'class-validator';
 
 export enum TCP_SERVICES {
   INVOICE_SERVICE = 'TCP_INVOICE_SERVICE',
+  PRODUCT_SERVICE = 'TCP_PRODUCT_SERVICE',
 }
 
 export class TcpConfiguration {
   @IsNotEmpty()
   @IsObject()
   TCP_INVOICE_SERVICE!: TcpClientOptions;
+
+  @IsNotEmpty()
+  @IsObject()
+  TCP_PRODUCT_SERVICE!: TcpClientOptions;
 
   constructor() {
     // môi trường ở constructor sẽ tồn tại khi chỉ mới khai báo, nên chỗ này giống kiểu nạp sẵn cho nó chạy ấy.

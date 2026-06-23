@@ -45,11 +45,11 @@ async function bootstrap() {
     const port = CONFIGURATION.APP_CONFIG.PORT;
     await app.listen(port);
     Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
-    console.log('=======================================');
-    console.log('GLOBAL_PREFIX: ', globalPrefix);
-    console.log('PORT: ', port);
+    Logger.log('=======================================');
+    Logger.log('GLOBAL_PREFIX: ', globalPrefix);
+    Logger.log('PORT: ', port);
   } catch (error) {
-    console.log(error);
+    Logger.log(error);
   }
 }
 
