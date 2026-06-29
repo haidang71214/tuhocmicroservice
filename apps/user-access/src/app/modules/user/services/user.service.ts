@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { User } from '@common/schemas/lib/user.schema';
 import { UserRepository } from '../repositories/user.repository';
 import { CreateUserTCPRequest } from '@common/interfaces/tcp/user';
@@ -22,17 +22,23 @@ export class UserService {
     return this.userRepository.getAll();
   }
 
-  async create(data: CreateUserTCPRequest, @ProcessId() processId: string) {
-    const mapped = await createUserRequestMapping(data);
-    const userId = await this.createKeyCloakUser(
-      {
-        email: mapped.email,
-        firstName: mapped.firstName,
-        lastName: mapped.lastName,
-        password: data.password,
-      },
-      processId,
-    );
+  async create(data: CreateUserTCPRequest, processId: string) {
+    const mapped = createUserRequestMapping(data);
+    let userId: string;
+    try {
+      userId = await this.createKeyCloakUser(
+        {
+          email: mapped.email!,
+          firstName: mapped.firstName!,
+          lastName: mapped.lastName!,
+          password: data.password,
+        },
+        processId,
+      );
+    } catch (error: any) {
+      Logger.error(`[UserService.create] createKeyCloakUser failed: ${JSON.stringify(error)}`, error?.stack);
+      throw error;
+    }
     mapped.userId = userId;
     return this.userRepository.create(mapped);
   }
@@ -40,7 +46,7 @@ export class UserService {
   getById(id: string) {
     return this.userRepository.getById(id);
   }
-
+  // cái này get cho keycloak
   getByUserId(userId: string) {
     return this.userRepository.getByUserId(userId);
   }

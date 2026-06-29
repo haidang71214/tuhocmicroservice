@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Logger, Post } from '@nestjs/common';
 import { ResponseDto } from '@common/interfaces/gateway/response.interface';
 import { map } from 'rxjs';
 import { TCP_SERVICES } from '@common/configuration/tcp.config';
@@ -9,6 +9,8 @@ import { InvoiceResponseDto, InvoiceRequestDto } from '@common/interfaces/gatewa
 import { TCP_REQUEST_MESSAGE } from '@common/constant/enum/tcp-invoice.enum';
 import { InvoiceTcpRequest, InvoiceTcpResponse } from '@common/interfaces/tcp/invoice';
 import { Authorization } from '@common/decorator/lib/authorizer.decorator';
+import { UserData } from '@common/decorator/lib/userData.decorator';
+import { AuthorizedMetadata } from '@common/interfaces/tcp/authorizer';
 @ApiTags('invoice')
 @Controller('invoice')
 export class InvoiceController {
@@ -26,7 +28,8 @@ export class InvoiceController {
 
   @Get('')
   @Authorization({ secured: true })
-  async getInvoice(@ProcessId() processId: string) {
+  async getInvoice(@ProcessId() processId: string, @UserData() userData: AuthorizedMetadata) {
+    Logger.debug('user', userData);
     return this.invoiceClient
       .send<
         string,

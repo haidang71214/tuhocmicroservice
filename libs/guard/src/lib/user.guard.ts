@@ -17,7 +17,7 @@ import { TCP_SERVICES } from '@common/configuration/tcp.config';
 import { TcpClient } from '@common/interfaces/tcp/common/tcp-client.interfaces';
 import { TCP_REQUEST_MESSAGE } from '@common/constant/enum/tcp-invoice.enum';
 import { AuthorizeResponse } from '@common/interfaces/tcp/authorizer';
-
+import { setUserData } from '@common/utils/request.util';
 @Injectable()
 export class UserGuard implements CanActivate {
   private readonly logger = new Logger(UserGuard.name);
@@ -49,6 +49,8 @@ export class UserGuard implements CanActivate {
       if (!result?.valid) {
         throw new UnauthorizedException('token invalid');
       }
+      setUserData(request, result);
+
       return true;
     } catch (error: any) {
       this.logger.error(`Token verification failed: ${error.message}`);

@@ -15,6 +15,7 @@ enum Product {
 enum User {
   CREATE = 'user.create',
   GET_BY_ID = 'user.get_by_id',
+  GET_BY_USER_ID = 'user.get_by_user_id', // lookup by Keycloak userId
   UPDATE_BY_ID = 'user.update_by_id',
   DELETE_BY_ID = 'user.delete_by_id',
   GET_ALL = 'user.get_all',

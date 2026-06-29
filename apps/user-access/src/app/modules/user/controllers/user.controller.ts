@@ -34,6 +34,12 @@ export class UserController {
     return Response.success(result);
   }
 
+  @MessagePattern(TCP_REQUEST_MESSAGE.User.GET_BY_USER_ID)
+  async getByUserId(@RequestParams() userId: string): Promise<Response<UserTcpResponse>> {
+    const result = await this.userService.getByUserId(userId);
+    return Response.success(result);
+  }
+
   @MessagePattern(TCP_REQUEST_MESSAGE.User.UPDATE_BY_ID)
   async updateById(
     @RequestParams() data: { id: string; data: UpdateUserTCPRequest },

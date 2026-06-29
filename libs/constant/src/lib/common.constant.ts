@@ -3,4 +3,5 @@ export enum MetadataKeys {
   PROCESS_ID = 'ProcessID',
   START_TIME = 'StartTime',
   SECURED = 'secured',
+  USER_DATA = 'userdata',
 }
