@@ -1,2 +1,2 @@
-import { InvoiceResponseDto } from '../../gateway/invoice/invoice-response.dto';
-export type InvoiceTcpResponse = InvoiceResponseDto;
+import { Invoice } from '@common/schemas/lib/invoice.schema';
+export type InvoiceTcpResponse = Partial<Invoice>;

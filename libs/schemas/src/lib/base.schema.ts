@@ -3,9 +3,6 @@ import { Prop, SchemaFactory, Virtual } from '@nestjs/mongoose';
 import { Schema, Types } from 'mongoose';
 
 export class BaseSchema {
-  // với mongo, mình hiểu là sẽ có fields _id
-  // nhưng khi lên bbackend rất hạn chế trong việc để _id
-  // thế nên mình cần custom 1 cái virtual fields nhằm mục đích handle trường hợp đó.
   _id!: Types.ObjectId;
   @Virtual({
     get: function (this: any) {
