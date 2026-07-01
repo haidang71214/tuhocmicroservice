@@ -27,7 +27,9 @@
       "@common/interceptors/*": ["./libs/interceptors/src/lib/*"],
       "@common/decorator/*": ["./libs/decorators/src/*"],
       "@common/schemas/*": ["./libs/schemas/src/*"],
-      "@common/entities/*": ["./libs/entities/src/lib/*"]
+      "@common/entities/*": ["./libs/entities/src/lib/*"],
+      "@common/guard": ["./libs/guard/src/index.ts"],
+      "@common/guard/*": ["./libs/guard/src/lib/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

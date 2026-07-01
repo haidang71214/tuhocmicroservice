@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './controllers/authorize.controller';
-import { KeyCloakHttpService } from './services/keycloak-http.service';
+import { AuthorizeService } from './services/authorize.service';
+import { keyCloakModule } from '../keycloak/keycloak.module';
 
 @Module({
+  imports: [keyCloakModule],
   controllers: [AppController],
-  providers: [KeyCloakHttpService],
+  providers: [AuthorizeService],
 })
 export class AuthorizeModule {}

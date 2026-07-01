@@ -1,7 +1,12 @@
 import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import axios, { AxiosInstance } from 'axios';
 import { ConfigService } from '@nestjs/config';
-import { CreateKeyCloakUserRequest, ExchangeClientTokenResponse } from '@common/interfaces/common/keycloak.interface';
+import {
+  CreateKeyCloakUserRequest,
+  ExchangeClientTokenResponse,
+  ExchangeUserTokenResponse,
+} from '@common/interfaces/common/keycloak.interface';
+import { LoginTcpRequest } from '@common/interfaces/tcp/authorizer';
 
 // đóng gói các http gửi tới keycloak.
 @Injectable()
@@ -78,5 +83,25 @@ export class KeyCloakHttpService {
       throw new InternalServerErrorException('user not created');
     }
     return userId;
+  }
+  async exchangeUserToken(params: LoginTcpRequest): Promise<ExchangeUserTokenResponse> {
+    const body = new URLSearchParams();
+    body.append('client_id', this.clientId);
+    body.append('client_secret', this.clientSecret);
+    body.append('grant_type', 'password');
+    body.append('scope', 'openid');
+    body.append('username', params.username);
+    body.append('password', params.password);
+
+    const { data } = await this.axiosInstance.post<ExchangeUserTokenResponse>(
+      `/realms/${this.realm}/protocol/openid-connect/token`,
+      body,
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      },
+    );
+    return data;
   }
 }

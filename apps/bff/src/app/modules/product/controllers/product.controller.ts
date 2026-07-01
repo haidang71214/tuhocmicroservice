@@ -12,7 +12,7 @@ import { TCP_REQUEST_MESSAGE } from '@common/constant/enum/tcp-invoice.enum';
 @Controller('product')
 export class ProductController {
   constructor(@Inject(TCP_SERVICES.PRODUCT_SERVICE) private readonly productTCPName: TcpClient) {}
-
+  // tcp client là 1 kiểu dữ liệu, của thằng producservice
   @Post()
   @ApiOkResponse({ type: ResponseDto<ProductResponseDto> })
   @ApiOperation({ summary: 'create product' })

@@ -48,6 +48,9 @@ export function TcpProvider(serviceName: keyof TcpConfiguration): ClientsProvide
   return {
     //do nó là môi trường cần nàp vào, config provider ở file riêng
     name: serviceName,
+    // dòng name : serviceName, khai báo cho cái
+    // @Injection(TCP_SERVICES.AUTHORIZER_SERVICE) private readonly tcpclient : tcpClient
+    // nó sẽ tự ánh xạ qua enum.
     imports: [ConfigModule],
     inject: [ConfigService],
     useFactory: (configService: ConfigService) => {

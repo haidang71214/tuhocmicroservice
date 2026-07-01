@@ -8,7 +8,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { InvoiceResponseDto, InvoiceRequestDto } from '@common/interfaces/gateway/invoice';
 import { TCP_REQUEST_MESSAGE } from '@common/constant/enum/tcp-invoice.enum';
 import { InvoiceTcpRequest, InvoiceTcpResponse } from '@common/interfaces/tcp/invoice';
-
+import { Authorization } from '@common/decorator/lib/authorizer.decorator';
 @ApiTags('invoice')
 @Controller('invoice')
 export class InvoiceController {
@@ -25,6 +25,7 @@ export class InvoiceController {
   }
 
   @Get('')
+  @Authorization({ secured: true })
   async getInvoice(@ProcessId() processId: string) {
     return this.invoiceClient
       .send<

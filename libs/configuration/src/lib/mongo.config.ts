@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { Connection } from 'mongoose';
-
+// nạp cấu hình
 export class MongoConfiguration {
   @IsString()
   @IsNotEmpty()
@@ -32,6 +32,7 @@ export class MongoConfiguration {
 // thì, nếu mình setup môi trường với những cái này
 // mình phải nạp môi trường từ MONGO_CONFIGURATION vào nó mới nhận được
 // hiểu chưa ?
+// kết nối database
 export const MongoProvider = MongooseModule.forRootAsync({
   imports: [ConfigModule],
   inject: [ConfigService],
