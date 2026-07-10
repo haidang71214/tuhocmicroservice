@@ -11,6 +11,8 @@ import { InvoiceTcpRequest, InvoiceTcpResponse } from '@common/interfaces/tcp/in
 import { Authorization } from '@common/decorator/lib/authorizer.decorator';
 import { UserData } from '@common/decorator/lib/userData.decorator';
 import { AuthorizedMetadata } from '@common/interfaces/tcp/authorizer';
+import { PERMISSION } from '@invoce/constant';
+import { Permissons } from '@common/decorator/lib/permisson.decorator';
 @ApiTags('invoice')
 @Controller('invoice')
 export class InvoiceController {
@@ -19,6 +21,8 @@ export class InvoiceController {
   @Post()
   @ApiOkResponse({ type: ResponseDto<InvoiceResponseDto> })
   @ApiOperation({ summary: 'create invoice' })
+  @Authorization({ secured: true })
+  @Permissons([PERMISSION.INVOICE_GET_BY_ID, PERMISSION.INVOICE_GET_ALL])
   async createInvoice(@Body() data: InvoiceRequestDto, @ProcessId() processId: string) {
     return this.invoiceClient.send<InvoiceTcpResponse, InvoiceTcpRequest>(TCP_REQUEST_MESSAGE.Invoice.CREATE, {
       data,
