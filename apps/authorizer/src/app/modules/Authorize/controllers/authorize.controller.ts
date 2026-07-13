@@ -9,7 +9,7 @@ import { AuthorizeResponse, LoginTcpRequest, LoginTcpResponse } from '@common/in
 import { ProcessId } from '@common/decorator/lib/processId.decorator';
 @Controller()
 @UseInterceptors(TcpLoggingInterceptor)
-export class AppController {
+export class AuthorierController {
   constructor(private readonly authorizeService: AuthorizeService) {}
   @MessagePattern(TCP_REQUEST_MESSAGE.Authorizer.LOGIN)
   async login(@RequestParams() data: LoginTcpRequest) {

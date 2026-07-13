@@ -45,18 +45,10 @@ export class AuthorizeService {
       throw new UnauthorizedException('Invalid token structure');
     }
     try {
-      this.logger.debug(`[Step 1] Getting signing key for kid: ${decoded.header.kid}`);
       const key = await this.jwksClient.getSigningKey(decoded.header.kid);
       const publicKey = key.getPublicKey();
-
-      this.logger.debug(`[Step 2] Verifying JWT signature`);
       const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] }) as JwtPayload;
-      this.logger.debug(`[Step 3] JWT valid, sub=${payload.sub}`);
-
-      this.logger.debug(`[Step 4] Looking up user by userId=${payload.sub}`);
       const user = await this.validationUser(payload.sub, processId);
-      this.logger.debug(`[Step 5] User found: ${user?.id}`);
-
       return {
         valid: true,
         metadata: {
@@ -67,7 +59,6 @@ export class AuthorizeService {
         },
       };
     } catch (error) {
-      this.logger.error(`[verifyUserToken FAILED] ${(error as any)?.message}`, (error as any)?.stack);
       throw new UnauthorizedException('Invalid token');
     }
   }

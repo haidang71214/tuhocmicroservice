@@ -8,29 +8,32 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { firstValueFrom, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Reflector } from '@nestjs/core';
 import { MetadataKeys } from '@common/constant';
 import { getAccessToken } from '@common/utils/request.util';
 import { getProcessId } from '@common/utils/string.util';
-import { TCP_SERVICES } from '@common/configuration/tcp.config';
-import { TcpClient } from '@common/interfaces/tcp/common/tcp-client.interfaces';
-import { TCP_REQUEST_MESSAGE } from '@common/constant/enum/tcp-invoice.enum';
-import { AuthorizeResponse } from '@common/interfaces/tcp/authorizer';
 import { setUserData } from '@common/utils/request.util';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import * as crypto from 'crypto';
-
+import { GRPC_SERVICES } from '@common/configuration/gRPC.config';
+import { ClientGrpc } from '@nestjs/microservices';
+import { AuthorizerService } from '@common/interfaces/grpc/authorizer';
 @Injectable()
 export class UserGuard implements CanActivate {
   private readonly logger = new Logger(UserGuard.name);
+  private authorizerService!: AuthorizerService;
 
   constructor(
     private readonly reflector: Reflector,
-    @Inject(TCP_SERVICES.AUTHORIZER_SERVICE) private readonly authorizerClient: TcpClient,
     @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    @Inject(GRPC_SERVICES.AUTHORIZER_SERVICE) private readonly authorizerGrpcClient: ClientGrpc,
   ) {}
+
+  onModuleInit() {
+    // truyền đúng cái tên service mà file proto định nghĩa.
+    this.authorizerService = this.authorizerGrpcClient.getService<AuthorizerService>('AuthorizerService');
+  }
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const authOptions = this.reflector.get<{ secured: boolean }>(MetadataKeys.SECURED, context.getHandler());
@@ -56,8 +59,11 @@ export class UserGuard implements CanActivate {
         setUserData(request, cacheData);
         return true;
       }
+      // gửi token về -> lấy user data và nhét vô
+      const response = await firstValueFrom(this.authorizerService.verifyUserToken({ token, processId }));
+      console.log('response', response);
 
-      const result = await this.verifyUserToken(token, processId);
+      const { data: result } = response;
       if (!result?.valid) {
         throw new UnauthorizedException('token invalid');
       }
@@ -70,18 +76,6 @@ export class UserGuard implements CanActivate {
       this.logger.error(`Token verification failed: ${error.message}`);
       throw error instanceof UnauthorizedException ? error : new ForbiddenException(error.message);
     }
-  }
-
-  // Gửi request qua TCP tới AuthorizeService để kiểm tra token
-  private async verifyUserToken(token: string, processId: string): Promise<any> {
-    return firstValueFrom(
-      this.authorizerClient
-        .send<AuthorizeResponse, any>(TCP_REQUEST_MESSAGE.Authorizer.VERIFY_USER_TOKEN, {
-          data: token,
-          processId,
-        })
-        .pipe(map((data) => data.data)),
-    );
   }
 
   generateTokenCaceKey = (token: string) => {
