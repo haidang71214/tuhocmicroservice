@@ -14,6 +14,7 @@ async function bootstrap() {
   });
 
   Logger.log(AppModule.CONFIGURATION.GRPC_CONFIG.GRPC_AUTHORIZER_SERVICE);
+
   app.connectMicroservice<MicroserviceOptions>(AppModule.CONFIGURATION.GRPC_CONFIG.GRPC_AUTHORIZER_SERVICE);
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);

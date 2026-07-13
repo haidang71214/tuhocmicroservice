@@ -10,15 +10,20 @@ import { TcpClient } from '@common/interfaces/tcp/common/tcp-client.interfaces';
 import { TCP_REQUEST_MESSSAGE } from '@common/constant/enum/tcp-invoice.enum';
 import { User } from '@common/schemas/lib/user.schema';
 import { Role } from '@common/schemas/lib/role.schema';
+import { GRPC_SERVICES } from '@common/configuration/gRPC.config';
+import { ClientGrpc } from '@nestjs/microservices';
+import { UserAccessService } from '@common/interfaces/grpc/user-acesss.grpc.ts/user-access.request';
 @Injectable()
 export class AuthorizeService {
   private readonly logger = new Logger(AuthorizeService.name);
   private readonly jwksClient: JwksClient;
+  private userAccessService: UserAccessService;
 
   constructor(
     @Inject(TCP_SERVICES.USER_ACCESS_SERVICE) private readonly userAccessClient: TcpClient,
     private readonly keycloakConnect: KeyCloakHttpService,
     private readonly configService: ConfigService,
+    @Inject(GRPC_SERVICES.USER_ACCESS_SERVICE) private readonly userAccessGrpcClient: ClientGrpc,
   ) {
     const host = this.configService.get('KEYCLOAK_CONFIG.HOST');
     const port = this.configService.get('KEYCLOAK_CONFIG.PORT');
@@ -31,6 +36,9 @@ export class AuthorizeService {
     });
   }
 
+  onModuleInit() {
+    this.userAccessService = this.userAccessGrpcClient.getService<UserAccessService>('UserAccessService');
+  }
   async login(data: LoginTcpRequest) {
     const response = await this.keycloakConnect.exchangeUserToken(data);
     return {
@@ -53,7 +61,7 @@ export class AuthorizeService {
         valid: true,
         metadata: {
           jwt: payload,
-          permissions: (user.role as unknown as Role[]).map((role) => role.permissions).flat(),
+          permissions: ((user.role as unknown as Role[]) || []).flatMap((role) => role.permissions ?? []),
           user: user,
           userId: user.id,
         },
@@ -65,7 +73,6 @@ export class AuthorizeService {
   private async validationUser(userId: string, processId: string) {
     let user: User | null;
     try {
-      this.logger.debug(`[validationUser] calling getUserByUserId with userId="${userId}"`);
       user = await this.getUserByUserId(userId, processId);
     } catch (error) {
       this.logger.error(`[validationUser] TCP call failed: ${(error as any)?.message}`);
@@ -78,14 +85,10 @@ export class AuthorizeService {
     }
     return user;
   }
-  private getUserByUserId(userId: string, processId: string) {
-    return firstValueFrom(
-      this.userAccessClient
-        .send<User, string>(TCP_REQUEST_MESSSAGE.User.GET_BY_USER_ID, {
-          processId,
-          data: userId,
-        })
-        .pipe(map((data) => data.data)),
-    );
+
+  private async getUserByUserId(userId: string, processId: string): Promise<User | null> {
+    const response = await firstValueFrom(this.userAccessService.getByUserId({ id: userId, processId }));
+    Logger.log('ahihi', response);
+    return response.data ?? null;
   }
 }

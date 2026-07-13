@@ -11,6 +11,9 @@ async function bootstrap() {
       port: AppModule.CONFIGURATION.TCP_SERV.TCP_USER_ACCESS_SERVICE.options?.port,
     },
   });
+
+  app.connectMicroservice<MicroserviceOptions>(AppModule.CONFIGURATION.GRPC_CONFIG.GRPC_USER_ACCESS_SERVICE);
+
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   const port = process.env.USER_ACCESS_PORT || 3000;

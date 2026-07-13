@@ -1,5 +1,5 @@
 import { Controller, UseInterceptors } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices';
+import { GrpcMethod, MessagePattern } from '@nestjs/microservices';
 import { TCP_REQUEST_MESSAGE } from '@common/constant/enum/tcp-invoice.enum';
 import { RequestParams } from '@common/decorator/lib/request.decorator';
 import { Response } from '@common/interfaces/tcp/common/response.interface';
@@ -31,12 +31,6 @@ export class UserController {
   @MessagePattern(TCP_REQUEST_MESSAGE.User.GET_BY_ID)
   async getById(@RequestParams() data: { id: string }): Promise<Response<UserTcpResponse>> {
     const result = await this.userService.getById(data.id);
-    return Response.success(result);
-  }
-
-  @MessagePattern(TCP_REQUEST_MESSAGE.User.GET_BY_USER_ID)
-  async getByUserId(@RequestParams() userId: string): Promise<Response<UserTcpResponse>> {
-    const result = await this.userService.getByUserId(userId);
     return Response.success(result);
   }
 

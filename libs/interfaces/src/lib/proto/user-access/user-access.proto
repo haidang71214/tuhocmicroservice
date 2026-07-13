@@ -1,0 +1,20 @@
+syntax = "proto3";
+package GRPC_USER_ACCESS_SERVICE;
+
+import "common/common.proto";
+
+service UserAccessService {
+  rpc getByUserId(UserById) returns (UserResponse) {}
+}
+
+message UserById {
+  string id = 1;
+  string processId = 2;
+}
+
+message UserResponse {
+  string code = 1;
+  COMMON.User data = 2;
+  string error = 3;
+  optional int32 statusCode = 4;
+}

@@ -30,6 +30,11 @@ module.exports = {
           input: 'libs/interfaces/src/lib/proto/authorizer',
           output: './proto',
         },
+        {
+          glob: '**/*',
+          input: 'libs/interfaces/src/lib/proto/common',
+          output: './proto/common',
+        },
       ],
       optimization: false,
       outputHashing: 'none',

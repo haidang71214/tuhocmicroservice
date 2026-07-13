@@ -15,7 +15,19 @@ module.exports = {
       compiler: 'tsc',
       main: './src/main.ts',
       tsConfig: './tsconfig.app.json',
-      assets: ['./src/assets'],
+      assets: [
+        './src/assets',
+        {
+          glob: '**/*',
+          input: 'libs/interfaces/src/lib/proto/user-access',
+          output: './proto',
+        },
+        {
+          glob: '**/*',
+          input: 'libs/interfaces/src/lib/proto/common',
+          output: './proto/common',
+        },
+      ],
       optimization: false,
       outputHashing: 'none',
       generatePackageJson: true,
