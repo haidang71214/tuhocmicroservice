@@ -29,9 +29,9 @@ enum Authorizer {
   VERIFY_USER_TOKEN = 'authorizer.verify_user_token',
   LOGIN = 'login',
 }
-
 enum PdfGenerator {
   CREATE_INVOICE_PDF = 'pdf-generator.create-invoice-pdf',
+  GET_INVOICE_PDF = 'pdf-generator.get-invoice-pdf',
 }
 export const TCP_REQUEST_MESSAGE = {
   Invoice,

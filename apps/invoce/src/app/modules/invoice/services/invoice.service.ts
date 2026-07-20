@@ -9,32 +9,37 @@ import { TCP_SERVICES } from '@common/configuration/tcp.config';
 import { TCP_REQUEST_MESSAGE } from '@common/constant/enum/tcp-invoice.enum';
 import { Invoice } from '@common/schemas/lib/invoice.schema';
 import { firstValueFrom } from 'rxjs';
-import { ObjectId } from 'mongodb';
+
 @Injectable()
 export class InvoiceService {
   constructor(
     private readonly invoiceRepository: InvoiceRepository,
     @Inject(TCP_SERVICES.PDF_GENERATOR_SERVICE) private readonly pdfGeneratorClient: ClientProxy,
   ) {}
+
   createInvoiceService(params: InvoiceTcpRequest) {
     const input = invoiceRequestMapping(params);
     return this.invoiceRepository.create(input);
   }
+
   async sendById(params: SendInvoiceTcpRequest, processId: string) {
     const { invoiceId, userId } = params;
     const invoice = await this.invoiceRepository.findById(invoiceId);
+    if (!invoice) {
+      throw new BadRequestException('Invoice not found');
+    }
     if (invoice.status === INVOICE_STATUS.SENT) {
       throw new BadRequestException(HTTP_MESSAGE.ALREADY_EXISTS);
     }
-    // generated pdf file -> upload pdf lên cloudynary.
     const base64 = await this.generatorPdf(invoice, processId);
     await this.invoiceRepository.updateById(invoiceId, {
       status: INVOICE_STATUS.SENT,
-      supervisorId: new ObjectId(userId),
+      supervisorId: userId,
     });
 
     return { result: base64 };
   }
+
   generatorPdf(data: Invoice, processId: string) {
     return firstValueFrom(
       this.pdfGeneratorClient.send<string, { data: Invoice; processId: string }>(

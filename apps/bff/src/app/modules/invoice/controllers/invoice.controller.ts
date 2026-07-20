@@ -4,7 +4,7 @@ import { map } from 'rxjs';
 import { TCP_SERVICES } from '@common/configuration/tcp.config';
 import { TcpClient } from '@common/interfaces/tcp/common/tcp-client.interfaces';
 import { ProcessId } from '@common/decorator/lib/processId.decorator';
-import { ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { InvoiceResponseDto, InvoiceRequestDto } from '@common/interfaces/gateway/invoice';
 import { TCP_REQUEST_MESSAGE } from '@common/constant/enum/tcp-invoice.enum';
 import { InvoiceTcpRequest, InvoiceTcpResponse, SendInvoiceTcpRequest } from '@common/interfaces/tcp/invoice';
@@ -41,14 +41,15 @@ export class InvoiceController {
       >('get_invoice', { processId, data: { invoiceId: 12, invoiceName: 'asdasdas' } })
       .pipe(map((data) => new ResponseDto<string>(data)));
   }
+
   @Post(':id/send')
   @ApiOkResponse({ type: ResponseDto<string> })
   @Authorization({ secured: true })
   @Permissons([PERMISSION.INVOICE_SEND])
   async sendInvoice(@Param('id') id: string, @ProcessId() processId: string, @UserData() userData: AuthorizedMetadata) {
     return this.invoiceClient
-      .send<string, SendInvoiceTcpRequest>(TCP_REQUEST_MESSAGE.Invoice.SEND, {
-        data: { invoiceId: id, userId: userData.userId }, // chỗ này hình như sai thì phải.
+      .send<any, SendInvoiceTcpRequest>(TCP_REQUEST_MESSAGE.Invoice.SEND, {
+        data: { invoiceId: id, userId: userData.userId! },
         processId,
       })
       .pipe(map((data) => new ResponseDto(data)));

@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { BaseSchema, createSchema } from './base.schema';
 import { INVOICE_STATUS } from '@common/constant/enum/invoice.enum';
 
@@ -48,10 +48,10 @@ export class Invoice extends BaseSchema {
   @Prop({ type: Number })
   vatAmount!: number;
 
-  @Prop({ type: String, enum: INVOICE_STATUS, default: INVOICE_STATUS.CREATED })
+  @Prop({ type: String, enum: INVOICE_STATUS, default: INVOICE_STATUS.CREATE })
   status!: INVOICE_STATUS;
-  @Prop({ type: Types.ObjectId, required: false })
-  supervisorId?: Types.ObjectId;
+  @Prop({ type: String, required: false })
+  supervisorId?: string;
   @Prop({ type: String, required: false })
   fileUrl?: string;
 }

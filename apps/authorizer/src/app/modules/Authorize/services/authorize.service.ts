@@ -50,7 +50,8 @@ export class AuthorizeService {
   async verifyUserToken(token: string, processId: string): Promise<AuthorizeResponse> {
     const decoded = jwt.decode(token, { complete: true }) as Jwt;
     if (!decoded || !decoded.header || !decoded.header.kid) {
-      throw new UnauthorizedException('Invalid token structure');
+      this.logger.error('[verifyUserToken] Invalid token structure');
+      return new AuthorizeResponse({ valid: false });
     }
     try {
       const key = await this.jwksClient.getSigningKey(decoded.header.kid);
@@ -71,21 +72,19 @@ export class AuthorizeService {
           userId: user.id || (user as any)._id?.toString(),
         },
       };
-    } catch (error) {
-      throw new UnauthorizedException('Invalid token');
+    } catch {
+      return new AuthorizeResponse({ valid: false });
     }
   }
   private async validationUser(userId: string, processId: string) {
     let user: User | null;
     try {
       user = await this.getUserByUserId(userId, processId);
-    } catch (error) {
-      this.logger.error(`[validationUser] TCP call failed: ${(error as any)?.message}`);
+    } catch {
       throw new UnauthorizedException('User service unavailable');
     }
 
     if (!user) {
-      this.logger.error(`[validationUser] No user found in DB for userId="${userId}"`);
       throw new UnauthorizedException('Invalid user');
     }
     return user;

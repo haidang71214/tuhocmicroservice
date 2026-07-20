@@ -7,6 +7,7 @@ import { InvoiceService } from './invoice/services/invoice.service';
 import { InvoiceRepository } from './invoice/repositories/invoice.repository';
 import { ClientsModule } from '@nestjs/microservices';
 import { TCP_SERVICES, TcpProvider } from '@common/configuration/tcp.config';
+
 @Module({
   imports: [
     MongoProvider,

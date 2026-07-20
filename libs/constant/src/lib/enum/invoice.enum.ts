@@ -1,5 +1,5 @@
 export enum INVOICE_STATUS {
-  CREATED = 'created',
+  CREATE = 'created',
   SENT = 'sent',
   PAID = 'paid',
 }
