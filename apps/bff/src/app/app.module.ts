@@ -17,6 +17,8 @@ import { RedisProvider } from '@common/configuration/redis.config';
 import { ThrottlerProvider } from '@common/configuration/throttler.config';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { GRPC_SERVICES, gRPCPRovider } from '@common/configuration/gRPC.config';
+import { AppController } from './app.controller';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [() => CONFIGURATION] }),
@@ -30,7 +32,7 @@ import { GRPC_SERVICES, gRPCPRovider } from '@common/configuration/gRPC.config';
     RedisProvider,
     ClientsModule.registerAsync([gRPCPRovider(GRPC_SERVICES.AUTHORIZER_SERVICE)]),
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [
     { provide: APP_INTERCEPTOR, useClass: ExceptionInterceptor },
     { provide: APP_GUARD, useClass: UserGuard },

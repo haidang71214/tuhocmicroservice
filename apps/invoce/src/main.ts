@@ -1,7 +1,9 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app/app.module';
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.connectMicroservice<MicroserviceOptions>({
@@ -13,12 +15,23 @@ async function bootstrap() {
   });
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
+
+  const config = new DocumentBuilder()
+    .setTitle('Invoice Microservice API')
+    .setDescription('Invoice microservice API documentation')
+    .setVersion('1.0.0')
+    .addBearerAuth()
+    .build();
+  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup(`${globalPrefix}/docs`, app, documentFactory);
+
   const port = process.env.INVOCE_PORT || 3000;
   // kích hoạt tất cả các microservice đã kết nối.
   await app.startAllMicroservices();
 
   await app.listen(port);
   Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
+  Logger.log(`📚 Swagger docs available at: http://localhost:${port}/${globalPrefix}/docs`);
 }
 
 bootstrap();

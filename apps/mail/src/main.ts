@@ -1,4 +1,3 @@
-import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app/app.module';
@@ -12,6 +11,7 @@ async function bootstrap() {
     transport: Transport.KAFKA,
     options: {
       client: {
+        clientId: 'email-service',
         brokers: [kafkaUrl],
       },
       consumer: {
@@ -23,13 +23,10 @@ async function bootstrap() {
 
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
-  const port = AppModule.CONFIGURATION.APP_CONFIG.PORT;
+  const port = process.env.EMAIL_PORT || process.env.MAIL_PORT || 3314;
 
   await app.startAllMicroservices();
   await app.listen(port);
-
-  Logger.log(`🚀 Email Microservice is running on: http://localhost:${port}`);
-  Logger.log(`🔗 Kafka URL: ${kafkaUrl}`);
 }
 
 bootstrap();

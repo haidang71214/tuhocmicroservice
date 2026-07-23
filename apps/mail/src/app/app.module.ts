@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CONFIGURATION, TConfiguration } from '../Configuration';
 import { ConfigModule } from '@nestjs/config';
+import { EmailController } from './email/email.controller';
 
 @Module({
   imports: [
@@ -9,7 +10,7 @@ import { ConfigModule } from '@nestjs/config';
       load: [() => CONFIGURATION],
     }),
   ],
-  controllers: [],
+  controllers: [EmailController],
   providers: [],
 })
 export class AppModule {
