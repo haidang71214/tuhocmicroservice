@@ -97,4 +97,7 @@ export class InvoiceService {
       status: INVOICE_STATUS.PAID,
     });
   }
+  getById(id: string) {
+    return this.invoiceRepository.getById(id);
+  }
 }

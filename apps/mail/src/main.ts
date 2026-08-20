@@ -17,6 +17,8 @@ async function bootstrap() {
       consumer: {
         groupId: QUEUE.EMAIL_QUEUE,
         allowAutoTopicCreation: true,
+        sessionTimeout: 60000,
+        heartbeatInterval: 5000,
       },
     },
   });

@@ -45,6 +45,6 @@ export class AppModule implements NestModule {
 
   configure(consumer: MiddlewareConsumer) {
     // Áp dụng LoggerMiddleware cho TẤT CẢ các route
-    consumer.apply(LoggerMiddleware).forRoutes('*');
+    consumer.apply(LoggerMiddleware).forRoutes('*path');
   }
 }

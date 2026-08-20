@@ -42,6 +42,20 @@ export class InvoiceController {
       .pipe(map((data) => new ResponseDto<string>(data)));
   }
 
+  @Get(':id')
+  @ApiOkResponse({ type: ResponseDto<InvoiceResponseDto> })
+  @ApiOperation({ summary: 'get invoice by id' })
+  @Authorization({ secured: true })
+  @Permissons([PERMISSION.INVOICE_GET_BY_ID])
+  async getInvoiceById(@Param('id') id: string, @ProcessId() processId: string) {
+    return this.invoiceClient
+      .send<InvoiceTcpResponse, string>(TCP_REQUEST_MESSAGE.Invoice.GET_BY_ID, {
+        data: id,
+        processId,
+      })
+      .pipe(map((data) => new ResponseDto(data)));
+  }
+
   @Post(':id/send')
   @ApiOkResponse({ type: ResponseDto<string> })
   @Authorization({ secured: true })
