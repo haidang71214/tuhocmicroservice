@@ -23,7 +23,7 @@ async function bootstrap() {
 
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
-  const port = process.env.EMAIL_PORT || process.env.MAIL_PORT || 3314;
+  const port = process.env.EMAIL_SERVICE_PORT || process.env.EMAIL_PORT || process.env.MAIL_PORT || 3314;
 
   await app.startAllMicroservices();
   await app.listen(port);
