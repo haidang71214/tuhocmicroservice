@@ -1,0 +1,49 @@
+import { DynamicModule, Module } from '@nestjs/common';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { hostname } from 'os';
+import { KafkaService } from './kafka.service';
+import { QUEUE_SERVICES } from '@common/constant/enum/queue';
+
+@Module({})
+export class KafkaModule {
+  static register(serviceName: QUEUE_SERVICES): DynamicModule {
+    return {
+      module: KafkaModule,
+      global: true,
+      imports: [
+        ConfigModule,
+        ClientsModule.registerAsync([
+          {
+            name: serviceName,
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: async (configService: ConfigService) => {
+              return {
+                transport: Transport.KAFKA,
+                options: {
+                  client: {
+                    clientId: `${serviceName}-${hostname()}`,
+                    brokers: [
+                      configService.get<string>('KAFKA_CONFIG.URL') ||
+                        configService.get<string>('KAFKA_URL') ||
+                        'localhost:9092',
+                    ],
+                  },
+                },
+              };
+            },
+          },
+        ]),
+      ],
+      providers: [
+        {
+          provide: KafkaService,
+          useFactory: (client) => new KafkaService(client),
+          inject: [serviceName],
+        },
+      ],
+      exports: [KafkaService],
+    };
+  }
+}

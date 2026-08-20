@@ -7,6 +7,7 @@ import { ResponseDto } from '@common/interfaces/gateway/response.interface';
 
 export class ExceptionInterceptor implements NestInterceptor {
   private readonly logger = new Logger(ExceptionInterceptor.name);
+
   intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
     const ctx = context.switchToHttp();
 

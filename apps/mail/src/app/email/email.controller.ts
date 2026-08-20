@@ -7,6 +7,6 @@ export class EmailController {
   @EventPattern('invoice_sent')
   async handleInvoiceSent(@Payload() payload, @Ctx() context: KafkaContext) {
     this.logger.log('Received : ', payload);
-    this.logger.log(payload);
+    this.logger.log(context);
   }
 }

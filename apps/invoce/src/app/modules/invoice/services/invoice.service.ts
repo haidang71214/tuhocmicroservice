@@ -12,7 +12,8 @@ import { firstValueFrom, map } from 'rxjs';
 import type { TcpClient } from '@common/interfaces/tcp/common/tcp-client.interfaces';
 import { PaymentService } from '../../payment/services/payment.service';
 import { createCheckoutSessionMapping } from '../mapper/index';
-import { ClientKafka } from '@nestjs/microservices';
+import { KafkaService } from '@common/kafka/kafka.service';
+
 @Injectable()
 export class InvoiceService {
   constructor(
@@ -20,18 +21,12 @@ export class InvoiceService {
     private readonly paymentService: PaymentService,
     @Inject(TCP_SERVICES.PDF_GENERATOR_SERVICE) private readonly pdfGeneratorClient: TcpClient,
     @Inject(TCP_SERVICES.MEDIA_SERVICE) private readonly mediaClient: TcpClient,
-    @Inject('INVOICE_SERVICE') private readonly mailClient: ClientKafka,
+    private readonly kafkaClient: KafkaService,
   ) {}
-  // mình vẫn phải connect client này tới kafka.
-  onModuleInit() {
-    this.mailClient.connect();
-  }
-
   createInvoiceService(params: InvoiceTcpRequest) {
     const input = invoiceRequestMapping(params);
     return this.invoiceRepository.create(input);
   }
-
   async sendById(params: SendInvoiceTcpRequest, processId: string) {
     const { invoiceId, userId } = params;
     const invoice = await this.invoiceRepository.findById(invoiceId);
@@ -54,17 +49,22 @@ export class InvoiceService {
     if (!fileUrl) {
       throw new BadRequestException('Upload file failed');
     }
+    // cái này có thể úm ba la để dùng với kafka vì rõ là nó đang không phụ thuộc
     await this.invoiceRepository.updateById(invoiceId, {
       status: INVOICE_STATUS.SENT,
       supervisorId: userId,
       fileUrl,
     });
-
-    this.mailClient.emit('invoice_sent', {
-      invoiceId,
-      clientEmail: invoice.client.email,
-    });
-
+    Promise.allSettled([
+      this.invoiceRepository.updateById(invoiceId, {
+        status: INVOICE_STATUS.SENT,
+        supervisorId: userId,
+        fileUrl,
+      }),
+      this.kafkaClient.emit('invoice_sent', {
+        data: { invoiceId, clientEmail: invoice.client.email },
+      }),
+    ]);
     return checkoutLink.url;
   }
 
