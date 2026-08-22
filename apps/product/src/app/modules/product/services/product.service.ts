@@ -9,6 +9,10 @@ export class ProductService {
   constructor(private readonly productRepository: ProductRepository) {}
 
   async createProductService(params: CreateProductTCPRequest): Promise<Response<ProductTcpResponse>> {
+    const isExists = await this.productRepository.exists(params.sku, params.name);
+    if (isExists) {
+      throw new BadRequestException('Product already exists');
+    }
     const product = await this.productRepository.create(params);
     return Response.success<ProductTcpResponse>(product);
   }

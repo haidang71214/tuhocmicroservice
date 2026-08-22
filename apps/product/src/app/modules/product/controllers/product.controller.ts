@@ -16,7 +16,7 @@ export class ProductController {
     return await this.productService.createProductService(params);
   }
   @MessagePattern(TCP_REQUEST_MESSAGE.Product.GET_ALL)
-  async getAllProducts(@RequestParams() params): Promise<Response<ProductTcpResponse[]>> {
+  async getAllProducts(): Promise<Response<ProductTcpResponse[]>> {
     return await this.productService.getAllProductsService();
   }
 }
