@@ -12,3 +12,6 @@ export enum PERMISSION {
   INVOICE_DELETE = 'invoice.delete',
   INVOICE_SEND = 'invoice.send',
 }
+export enum ROLE_ID {
+  ADMIN = '68a3f2f1b3e811435a8ad004',
+}

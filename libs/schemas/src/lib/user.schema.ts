@@ -15,7 +15,7 @@ export class User extends BaseSchema {
   email!: string;
   @Prop({ required: true, trim: true, unique: true })
   userId!: string;
-  @Prop({ required: true, trim: true, unique: true })
+  @Prop({ required: true, trim: true })
   password!: string; // lưu vào đây để lần sau không cần đăng nhập vào keycloak nữa
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Role' }] })
   role!: Types.ObjectId[];
