@@ -30,7 +30,8 @@
       "@common/entities/*": ["./libs/entities/src/lib/*"],
       "@common/guard": ["./libs/guard/src/index.ts"],
       "@common/guard/*": ["./libs/guard/src/lib/*"],
-      "@common/kafka/*": ["./libs/kafka/src/lib/*"]
+      "@common/kafka/*": ["./libs/kafka/src/lib/*"],
+      "@common/observable": ["./libs/observable/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
