@@ -19,9 +19,12 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 import { GRPC_SERVICES, gRPCPRovider } from '@common/configuration/gRPC.config';
 import { AppController } from './app.controller';
 
+import { HealthModule } from './modules/healthcheck/health.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [() => CONFIGURATION] }),
+    HealthModule,
     InvoiceModule,
     ProductModule,
     UserModule,
