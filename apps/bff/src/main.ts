@@ -8,7 +8,6 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger as PinoLogger } from '@common/observable';
 import { AppModule } from './app/app.module';
-import { CONFIGURATION } from './Configuration';
 
 async function bootstrap() {
   try {
@@ -17,7 +16,7 @@ async function bootstrap() {
       bufferLogs: true,
     });
     app.useLogger(app.get(PinoLogger));
-    const globalPrefix = CONFIGURATION.GLOBAL_PREFIX;
+    const globalPrefix = AppModule.CONFIGURATION.GLOBAL_PREFIX;
     app.setGlobalPrefix(globalPrefix);
     app.useGlobalPipes(new ValidationPipe({ transform: true }));
     app.enableCors({
@@ -47,7 +46,7 @@ async function bootstrap() {
     const documentFactory = () => SwaggerModule.createDocument(app, config);
     SwaggerModule.setup(`${globalPrefix}/docs`, app, documentFactory);
 
-    const port = CONFIGURATION.APP_CONFIG.PORT;
+    const port = AppModule.CONFIGURATION.APP_CONFIG.PORT;
     await app.listen(port);
     Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
     Logger.log('=======================================');

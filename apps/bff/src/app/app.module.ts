@@ -33,7 +33,7 @@ import { LoggerModule } from '@common/observable';
     ThrottlerProvider,
     ClientsModule.registerAsync([TcpProvider(TCP_SERVICES.AUTHORIZER_SERVICE)]),
     RedisProvider,
-    LoggerModule.forRoot(),
+    LoggerModule.forRoot('bff'),
     ClientsModule.registerAsync([gRPCPRovider(GRPC_SERVICES.AUTHORIZER_SERVICE)]),
   ],
   controllers: [AppController],
