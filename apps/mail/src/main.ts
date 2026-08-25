@@ -1,3 +1,6 @@
+import { initTracing } from '@common/observable';
+
+initTracing('mail-service');
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app/app.module';

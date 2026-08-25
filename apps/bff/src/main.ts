@@ -2,6 +2,9 @@
  * This is not a production server yet!
  * This is only a minimal backend to get started.
  */
+import { initTracing } from '@common/observable';
+
+initTracing('bff-service');
 
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
@@ -20,7 +23,6 @@ async function bootstrap() {
     app.setGlobalPrefix(globalPrefix);
     app.useGlobalPipes(new ValidationPipe({ transform: true }));
     app.enableCors({
-      // aukey cors cũng như bình thường
       origin: '*',
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
       credentials: true,

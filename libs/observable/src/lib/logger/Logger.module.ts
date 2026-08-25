@@ -2,6 +2,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerModule as PinoLoggerModule } from 'nestjs-pino';
 import { TransportTargetOptions } from 'pino';
+import { trace, context } from '@opentelemetry/api';
 
 @Module({})
 export class LoggerModule {
@@ -52,6 +53,18 @@ export class LoggerModule {
                 serializers: {
                   req: () => undefined,
                   res: () => undefined,
+                },
+                mixin() {
+                  const span = trace.getSpan(context.active());
+                  if (span) {
+                    const { traceId, spanId, traceFlags } = span.spanContext();
+                    return {
+                      trace_id: traceId,
+                      span_id: spanId,
+                      trace_flags: traceFlags.toString(16).padStart(2, '0'),
+                    };
+                  }
+                  return {};
                 },
               },
             };

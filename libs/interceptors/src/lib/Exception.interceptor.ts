@@ -17,9 +17,11 @@ export class ExceptionInterceptor implements NestInterceptor {
     const startTime = request?.[MetadataKeys.START_TIME] || Date.now();
     return next.handle().pipe(
       map((data: ResponseDto<unknown>) => {
-        const durationMs = Date.now() - startTime;
-        data.processId = processID;
-        data.duration = `${durationMs} ms`;
+        if (data instanceof ResponseDto) {
+          const durationMs = Date.now() - startTime;
+          data.processId = processID;
+          data.duration = `${durationMs} ms`;
+        }
         return data;
       }),
       catchError((error) => {

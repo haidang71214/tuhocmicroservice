@@ -20,6 +20,7 @@ import { GRPC_SERVICES, gRPCPRovider } from '@common/configuration/gRPC.config';
 import { AppController } from './app.controller';
 import { HealthModule } from './modules/healthcheck/health.module';
 import { LoggerModule } from '@common/observable';
+import { MetricsModule } from '@common/observable';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { LoggerModule } from '@common/observable';
     ClientsModule.registerAsync([TcpProvider(TCP_SERVICES.AUTHORIZER_SERVICE)]),
     RedisProvider,
     LoggerModule.forRoot('bff'),
+    MetricsModule,
     ClientsModule.registerAsync([gRPCPRovider(GRPC_SERVICES.AUTHORIZER_SERVICE)]),
   ],
   controllers: [AppController],

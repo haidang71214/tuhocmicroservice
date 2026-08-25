@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s # Chu kỳ lấy dữ liệu (15 giây 1 lần)
+
+scrape_configs:
+  - job_name: 'nestjs-app'
+    metrics_path: /api/v1/metrics # Đường dẫn API trong codebase
+    static_configs:
+      # host.docker.internal giúp container Prometheus nhìn thấy máy host
+      - targets: ['host.docker.internal:3400','host.docker.internal:3309']
+        labels:
+          app: 'nestjs-app'
